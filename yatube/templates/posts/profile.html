@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+{% block title %}Профиль{% endblock %}
+  <h2>Профиль пользователя {{ author.get_full_name}}</h2>
+  <h2>Всего постов: {{ author.posts.count }}</h2>
+  <hr>
+  {% for post in page_obj %}
+    {% include 'posts/includes/article.html' with profile=True %}
+    {% if not forloop.last %}
+      <hr>
+    {% endif %}
+    {% empty %}
+      <p>Нет Постов</p>
+  {% endfor %}
+  {% include 'posts/includes/paginator.html' %}
+{% endblock %}
