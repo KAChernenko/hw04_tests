@@ -65,18 +65,6 @@ class PostFormTests(TestCase):
         )
         self.assertEqual(response.status_code, HTTPStatus.OK)
         post = Post.objects.latest("id")
-        self.assertTrue(post.text == form_data["text"])
-        self.assertTrue(post.author == self.post_author)
-        self.assertTrue(post.group_id == form_data["group"])
-
-    def test_nonauthorized_user_create_post(self):
-        """Проверка создания записи не авторизированным пользователем."""
-        posts_count = Post.objects.count()
-        form_data = {"text": "Текст поста", "group": self.group.id}
-        response = self.guest_user.post(
-            reverse("posts:post_create"), data=form_data, follow=True
-        )
-        self.assertEqual(response.status_code, HTTPStatus.OK)
-        redirect = reverse("login") + "?next=" + reverse("posts:post_create")
-        self.assertRedirects(response, redirect)
-        self.assertEqual(Post.objects.count(), posts_count)
+        self.assertEqual(post.text, form_data["text"])
+        self.assertEqual(post.author, self.post_author)
+        self.assertEqual(post.group_id, form_data["group"])

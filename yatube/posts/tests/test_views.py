@@ -5,7 +5,7 @@ from django.urls import reverse
 from posts.models import Group, Post
 
 User = get_user_model()
-TEST_OF_POST = 13
+TEST_OF_POST: int = 13
 
 
 class PostPagesTests(TestCase):
@@ -64,20 +64,6 @@ class PostPagesTests(TestCase):
             with self.subTest(value=value):
                 form_field = response.context.get('form').fields.get(value)
                 self.assertIsInstance(form_field, expected)
-
-    def test_post_edit_page_show_correct_context(self):
-        """Шаблон post_edit.html сформирован с правильным контекстом."""
-        response = self.authorized_client.get(
-            reverse('posts:post_edit', kwargs={'post_id': self.post.id}))
-        form_fields = {
-            'text': forms.fields.CharField,
-            'group': forms.fields.ChoiceField,
-        }
-        for value, expected in form_fields.items():
-            with self.subTest(value=value):
-                form_field = response.context.get('form').fields.get(value)
-                self.assertIsInstance(form_field, expected)
-        self.assertTrue(response.context.get('is_edit'))
 
     def test_index_page_show_correct_context(self):
         """Шаблон index.html сформирован с правильным контекстом."""
