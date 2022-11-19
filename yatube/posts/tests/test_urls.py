@@ -96,7 +96,7 @@ class StaticURLTests(TestCase):
                 self.assertEqual(status_code, response_code)
 
     def test_author_user_urls_status_code(self):
-        """Проверка status_code для авторизированого автора."""
+        """Проверка status_code для автора поста."""
         post_author_urls = {
             reverse(
                 'posts:index'): HTTPStatus.OK,
