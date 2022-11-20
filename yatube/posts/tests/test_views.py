@@ -55,7 +55,8 @@ class PostPagesTests(TestCase):
 
     def test_forms_show_correct(self):
         """"Шаблон post_create.html сформирован с правильным контекстом."""
-        urls = [reverse('posts:post_create'), reverse('posts:post_edit', kwargs={'post_id': self.post.id})]
+        urls = [reverse('posts:post_create'),
+                reverse('posts:post_edit', kwargs={'post_id': self.post.id})]
         for url in urls:
             response = self.authorized_client.get(url)
             form_fields = {
