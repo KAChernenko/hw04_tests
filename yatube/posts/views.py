@@ -83,13 +83,21 @@ def post_create(request):
 
 @login_required(login_url="users:login")
 def post_edit(request, post_id):
-    template = 'posts/post_create.html'
-    posts = Post.objects.select_related('group')
-    post = get_object_or_404(posts, id=post_id)
-    form = PostForm(request.POST or None, instance=post)
+    post = get_object_or_404(Post, pk=post_id)
     if post.author != request.user:
-        return redirect('posts:index')
+        return redirect('posts:post_detail', post_id=post_id)
+
+    form = PostForm(
+        request.POST or None,
+        files=request.FILES or None,
+        instance=post
+    )
     if form.is_valid():
         form.save()
-        return redirect('posts:post_detail', post.id)
-    return render(request, template, {'form': form, 'is_edit': True})
+        return redirect('posts:post_detail', post_id=post_id)
+    context = {
+        'post': post,
+        'form': form,
+        'is_edit': True,
+    }
+    return render(request, 'posts/post_create.html', context)

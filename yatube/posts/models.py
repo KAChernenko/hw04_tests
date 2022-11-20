@@ -16,6 +16,12 @@ class Post(models.Model):
     )
     group = models.ForeignKey('Group', blank=True, null=True,
                               on_delete=models.SET_NULL, related_name='posts')
+    image = models.ImageField(
+        'Картинка',
+        upload_to='posts/',
+        blank=True
+    )
+
 
     class Meta:
         ordering = ['-pub_date']
