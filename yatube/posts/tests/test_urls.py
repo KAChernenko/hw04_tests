@@ -38,9 +38,9 @@ class StaticURLTests(TestCase):
         cls.author_urls = {
             f'/posts/{cls.post.id}/edit/': 'posts/post_create.html',
         }
-        cls.urls_for_authorizhed_cliet = {**cls.public_urls, **cls.private_urls}
-        cls.urls_unavailable_for_client = {**cls.private_urls, **cls.author_urls}
-        cls.all_urls = {**cls.public_urls, **cls.private_urls, **cls.author_urls}
+        cls.urls_for_login_client = {**cls.public_urls, **cls.private_urls}
+        cls.urls_not_for_guest = {**cls.private_urls, **cls.author_urls}
+        cls.urls = {**cls.public_urls, **cls.private_urls, **cls.author_urls}
 
     def setUp(self):
         self.guest_client = Client()
@@ -48,7 +48,6 @@ class StaticURLTests(TestCase):
         self.post_author.force_login(self.user_author)
         self.authorized_user = Client()
         self.authorized_user.force_login(self.another_user)
-        
 
     def test_guest_urls(self):
         """Проверка status_code для гостя."""
@@ -66,14 +65,14 @@ class StaticURLTests(TestCase):
 
     def test_author_user_urls_status_code(self):
         """Проверка status_code для автора поста."""
-        for url in self.urls_unavailable_for_client.keys():
+        for url in self.urls_not_for_guest.keys():
             with self.subTest(url=url):
                 status_code = self.post_author.get(url).status_code
                 self.assertEqual(status_code, HTTPStatus.OK)
 
     def test_urls(self):
         """URL-адрес использует соответствующий шаблон."""
-        for url, template in self.all_urls.items():
+        for url, template in self.urls.items():
             with self.subTest(url=url):
                 response = self.post_author.get(url)
                 self.assertTemplateUsed(response, template)
