@@ -55,15 +55,17 @@ class PostPagesTests(TestCase):
 
     def test_forms_show_correct(self):
         """"Шаблон post_create.html сформирован с правильным контекстом."""
-        response = self.authorized_client.get(reverse('posts:post_create'))
-        form_fields = {
-            'text': forms.fields.CharField,
-            'group': forms.fields.ChoiceField,
-        }
-        for value, expected in form_fields.items():
-            with self.subTest(value=value):
-                form_field = response.context.get('form').fields.get(value)
-                self.assertIsInstance(form_field, expected)
+        urls = [reverse('posts:post_create'), reverse('posts:post_edit', kwargs={'post_id': self.post.id})]
+        for url in urls:
+            response = self.authorized_client.get(url)
+            form_fields = {
+                'text': forms.fields.CharField,
+                'group': forms.fields.ChoiceField,
+            }
+            for value, expected in form_fields.items():
+                with self.subTest(value=value):
+                    form_field = response.context.get('form').fields.get(value)
+                    self.assertIsInstance(form_field, expected)
 
     def test_index_page_show_correct_context(self):
         """Шаблон index.html сформирован с правильным контекстом."""
